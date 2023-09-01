@@ -116,7 +116,7 @@ sub worker {
 
 	radiusd::radlog(L_DBG, "oauth2 worker ($realm): fetching discovery document");
 
-    my $forward_proxy = radiusd::xlat(radiusd::xlat("%{config:realm[$realm].oauth2.forward_proxy}"));
+	my $forward_proxy = radiusd::xlat(radiusd::xlat("%{config:realm[$realm].oauth2.forward_proxy}"));
 	$ua->proxy(['http', 'https'], $forward_proxy);
 
 	my $r = $ua->get("${discovery_uri}/.well-known/openid-configuration");
@@ -367,7 +367,7 @@ sub authenticate {
 	my $client_id = radiusd::xlat("%{config:realm[$realm].oauth2.client_id}");
 	my $client_secret = radiusd::xlat("%{config:realm[$realm].oauth2.client_secret}");
 
-    my $forward_proxy = radiusd::xlat(radiusd::xlat("%{config:realm[$realm].oauth2.forward_proxy}"));
+	my $forward_proxy = radiusd::xlat(radiusd::xlat("%{config:realm[$realm].oauth2.forward_proxy}"));
 	$ua->proxy(['http', 'https'], $forward_proxy);
 
 	radiusd::radlog(L_INFO, "oauth2 token");
