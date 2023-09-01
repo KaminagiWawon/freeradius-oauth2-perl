@@ -72,7 +72,6 @@ radiusd::radlog(L_DBG, 'oauth2 global');
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
-$ua->env_proxy;
 $ua->agent("freeradius-oauth2-perl/0.2 (+https://github.com/jimdigriz/freeradius-oauth2-perl; ${\$ua->_agent})");
 $ua->conn_cache(LWP::ConnCache->new);
 $ua->default_header('Accept-Encoding' => scalar HTTP::Message::decodable());
@@ -116,6 +115,9 @@ sub worker {
 	radiusd::radlog(L_DBG, "oauth2 worker ($realm): supervisor started (tid=${\threads->tid()})");
 
 	radiusd::radlog(L_DBG, "oauth2 worker ($realm): fetching discovery document");
+
+    my $forward_proxy = radiusd::xlat(radiusd::xlat("%{config:realm[$realm].oauth2.forward_proxy}"));
+	$ua->proxy(['http', 'https'], $forward_proxy);
 
 	my $r = $ua->get("${discovery_uri}/.well-known/openid-configuration");
 	unless ($r->is_success) {
@@ -364,6 +366,9 @@ sub authenticate {
 	}
 	my $client_id = radiusd::xlat("%{config:realm[$realm].oauth2.client_id}");
 	my $client_secret = radiusd::xlat("%{config:realm[$realm].oauth2.client_secret}");
+
+    my $forward_proxy = radiusd::xlat(radiusd::xlat("%{config:realm[$realm].oauth2.forward_proxy}"));
+	$ua->proxy(['http', 'https'], $forward_proxy);
 
 	radiusd::radlog(L_INFO, "oauth2 token");
 
