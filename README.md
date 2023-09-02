@@ -120,11 +120,13 @@ Add the following to `/etc/freeradius/proxy.conf`:
             client_id = "..."
             client_secret = "..."
             cache_password = yes
+    #       forward_proxy = "http://proxy.example.com:8080/"
         }
     }
 
 Replacing `example.com` with your domain and `oauth2_client_{id,secret}` with the noted values from earlier and if you maintain multiple domains you should add multiple blocks here too.
-
+If your internet access is through a proxy and you have set the environment variable https_proxy but not through a proxy, uncomment `forward_proxy` and replaceing `http://proxy.example.com:8080` with your proxy.
+Replacing `proxy.example.com:8080` with your forward proxy address or 
 **N.B.** do *not* use regular expression to capture your `realm`, you *must* create an entry for each and every (sub-)domain you intend to use
 
 If local policy requires you to disable password caching then you can set `cache_password = no` (default: `yes`, *anything* else is treated as `no`) but it is strongly recommended this is enabled as it improves user-experience and provides protection from potential service outages if Azure decides to throttle you.
